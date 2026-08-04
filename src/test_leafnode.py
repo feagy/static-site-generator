@@ -8,10 +8,10 @@ class TestLeafNode(unittest.TestCase):
         text = f"LeafNode({tag}, {value}, {props})"
         self.assertEqual(str(node), text)
 
-    def test_value_2(self):
+    def test_value_1(self):
         self._value_test(tag = "h", value = "this is a leafnode")
 
-    def test_value_3(self):
+    def test_value_2(self):
         self._value_test(
             tag = "a",
             value = "this is a htmlnode",

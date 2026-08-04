@@ -14,6 +14,4 @@ class LeafNode(HTMLNode):
         if not self.tag:
             return self.value
     
-        props_str = f" {self.props_to_html()}" if self.props and self.props_to_html() else ""        
-        
-        return f"<{self.tag}{props_str}>{self.value}</{self.tag}>"
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
