@@ -7,7 +7,7 @@ import sys
 
 def main():
     try:
-        basepath = sys.argv[0] if sys.argv[0] else "/"
+        basepath = sys.argv[1] if sys.argv[1] else "/"
         clean_file("public") 
         copy_file_contents("static", "docs")
         
