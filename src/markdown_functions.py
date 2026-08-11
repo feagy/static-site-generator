@@ -5,6 +5,8 @@ from parentnode import ParentNode
 from htmlnode import HTMLNode
 from split_nodes import text_to_textnodes
 from textnode import TextNode, TextType, text_node_to_html_node
+from file_functions import write_to_html_file, read_from_file
+import os
 
 class BlockType(Enum):
     PARAGRAPH = "paragraph"
@@ -97,6 +99,42 @@ def text_to_children(text) -> list[HTMLNode]:
     child_textnodes = text_to_textnodes(text)  
     return [text_node_to_html_node(child_textnode) for child_textnode in child_textnodes]  
 
+def extract_title(markdown: str) -> str:
+    lines = markdown.splitlines()
+    
+    for line in lines:
+        stripped_line = line.strip()
+       
+        if stripped_line.startswith("# "):
+            title = stripped_line[2:].strip()
+            return title
+  
+    raise Exception("h1 heading not found")
+
+def generate_page(from_path: str, template_path: str, dst_path: str) -> None:
+    print(f"Generating page from {from_path} to {dst_path.split(".", 1)[0] + ".html"} using {template_path}")
+    md = read_from_file(from_path)
+    template = read_from_file(template_path)
+
+    html_content = markdown_to_html_node(md).to_html()
+    title = extract_title(md)
+    template = template.replace("{{ Title }}", title)
+    template = template.replace("{{ Content }}", html_content)
+
+    write_to_html_file(template, dst_path)
+
+def generate_pages_recursive(dir_path_content: str, template_path: str, dst_dir_path: str) -> None:
+    for src_file in os.listdir(dir_path_content):
+        src_file_path = os.path.join(dir_path_content, src_file)
+        dst_file_path = os.path.join(dst_dir_path, src_file)
+
+        if os.path.isfile(src_file_path):
+            generate_page(src_file_path, template_path, dst_file_path)
+        else:
+            generate_pages_recursive(src_file_path, template_path, dst_file_path)
+
+    
+    
 
 
 
